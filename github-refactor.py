@@ -128,7 +128,7 @@ def getFriendsFromUser(user):
 def getRepoFromUsers():
     while True:
         currentCount = getUrlsCount()
-        print "Current count of urls is " + currentCount
+        print "Current count of urls is " + str(currentCount)
         if(currentCount > TARGET):
             print "Finishing crawling, total count of urls is " + str(TARGET)
         return
