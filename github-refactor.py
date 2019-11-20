@@ -17,23 +17,31 @@
 import wget
 import time
 import simplejson
-import csv
 import pycurl
 import math
 from StringIO import StringIO
-import Queue as queue
+import MySQLdb
 #############
 # Constants #
 #############
 
+db = MySQLdb.connect(host="localhost",    # your host, usually localhost
+                     user="root",         # your username
+                     passwd="19930127",  # your password
+                     db="crawler")        # name of the data base
+
+cur = db.cursor()
+
+
+def createTables():
+    cur.execute("CREATE TABLE IF NOT EXISTS 'repoURLs'")
+    cur.execute("DROP TABLE IF NOT EXISTS 'pendingUsers'")
+    cur.execute("DROP TABLE IF NOT EXISTS 'processedUsers'")
+
 BASEURL = "https://api.github.com/" #The basic URL to use the GitHub API
-ORGS = ["alibaba","google","microsoft","huawei","apple","xiaomi","tencent","ibm","facebook","paypal","nasa","netease","sap","nodejs","twitter"]
 PARAMETERS = "&per_page=100" #Additional parameters for the query (by default 100 items per page)
 DELAY_BETWEEN_QUERYS = 10 #The time to wait between different queries to GitHub (to avoid be banned)
-OUTPUT_CSV_FILE = "./repositories.csv" #Path to the CSV file generated as output
-TARGET = 1000
-countOfRepositories = 0
-SEEDUSERS = ["1216114309zpf"]
+TARGET = 5000
 
 
 
@@ -76,14 +84,6 @@ def getRepo(account, accountType):
         time.sleep(DELAY_BETWEEN_QUERYS)
 
 
-def getRepoFromORGS(orgs):
-    for org in range(1, len(orgs)+1):
-        print "Processing org " + ORGS[org - 1] + " "  + str(org) + " of " + str(len(ORGS)) + " ..."
-        getRepo(ORGS[org - 1], "orgs")
-        processORG(ORGS[org - 1])
-        if achieveTarget():
-            break
-
 def getFriendsFromUser(user):
     friends = []
     followerURL = BASEURL + "users/" + user + "/followers?per_page=100"
@@ -120,12 +120,5 @@ def getRepoFromUsers():
                 dict[friend] = True
                 candidateQue.put(friend)
 
-
-csvfile = open(OUTPUT_CSV_FILE, 'wb')
-repositories = csv.writer(csvfile, delimiter=',')
-
-getRepoFromORGS(ORGS)
-getRepoFromUsers()
-
-print "DONE! " + str(countOfRepositories) + " repositories have been processed."
-csvfile.close()
+createTables()
+#getRepoFromUsers()
