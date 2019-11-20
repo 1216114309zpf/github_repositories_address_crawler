@@ -25,7 +25,7 @@ import MySQLdb
 # Constants #
 #############
 
-db = MySQLdb.connect(host="30.5.121.7",    # your host, usually localhost
+db = MySQLdb.connect(host="localhost",    # your host, usually localhost
                      user="root",         # your username
                      passwd="19930127",  # your password
                      db="crawler")        # name of the data base
@@ -43,7 +43,7 @@ def createTables():
         ")
 
 
-    cur.execute("DROP TABLE IF NOT EXISTS `pending_users` (\
+    cur.execute("CREATE TABLE IF NOT EXISTS `pending_users` (\
         `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'primary key',\
         `name` varchar(255) DEFAULT NULL COMMENT 'comment',\
          PRIMARY KEY (`id`)\
@@ -51,7 +51,7 @@ def createTables():
         ;\
         ")
 
-    cur.execute("DROP TABLE IF NOT EXISTS `processed_users` (\
+    cur.execute("CREATE TABLE IF NOT EXISTS `processed_users` (\
         `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'primary key',\
         `name` varchar(255) DEFAULT NULL COMMENT 'comment',\
          PRIMARY KEY (`id`)\
