@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # This script allows to crawl information and repositories from GitHub using the GitHub REST API (https://developer.github.com/v3/search/).
 #
 # Given a query, the script downloads for each repository returned by the query its ZIP file.
@@ -14,7 +15,6 @@
 # Libraries #
 #############
 
-import wget
 import time
 import simplejson
 import pycurl
@@ -34,7 +34,17 @@ cur = db.cursor()
 
 
 def createTables():
-    cur.execute("CREATE TABLE IF NOT EXISTS 'repoURLs'")
+    cur.execute("CREATE TABLE IF NOT EXISTS 'repoURLs' \
+    (      \
+          'id' bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'primary key', \
+          'created_at' datetime NOT NULL COMMENT 'comment', \
+          'updated_at' datetime NOT NULL COMMENT 'comment', \
+          'name' varchar(255) DEFAULT NULL COMMENT 'comment', \
+          PRIMARY KEY ('id') \
+    ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='machine_groups'\
+    "
+
+
     cur.execute("DROP TABLE IF NOT EXISTS 'pendingUsers'")
     cur.execute("DROP TABLE IF NOT EXISTS 'processedUsers'")
 
