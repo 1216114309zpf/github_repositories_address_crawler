@@ -25,7 +25,7 @@ import MySQLdb
 # Constants #
 #############
 
-db = MySQLdb.connect(host="localhost",    # your host, usually localhost
+db = MySQLdb.connect(host="30.5.121.7",    # your host, usually localhost
                      user="root",         # your username
                      passwd="19930127",  # your password
                      db="crawler")        # name of the data base
@@ -34,19 +34,30 @@ cur = db.cursor()
 
 
 def createTables():
-    cur.execute("CREATE TABLE IF NOT EXISTS 'repoURLs' \
-    (      \
-          'id' bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'primary key', \
-          'created_at' datetime NOT NULL COMMENT 'comment', \
-          'updated_at' datetime NOT NULL COMMENT 'comment', \
-          'name' varchar(255) DEFAULT NULL COMMENT 'comment', \
-          PRIMARY KEY ('id') \
-    ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='machine_groups'\
-    "
+    cur.execute("CREATE TABLE if not exists `repo_urls` (\
+        `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'primary key',\
+        `name` varchar(255) DEFAULT NULL COMMENT 'comment',\
+         PRIMARY KEY (`id`)\
+        ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='repo_urls'\
+        ;\
+        ")
 
 
-    cur.execute("DROP TABLE IF NOT EXISTS 'pendingUsers'")
-    cur.execute("DROP TABLE IF NOT EXISTS 'processedUsers'")
+    cur.execute("DROP TABLE IF NOT EXISTS `pending_users` (\
+        `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'primary key',\
+        `name` varchar(255) DEFAULT NULL COMMENT 'comment',\
+         PRIMARY KEY (`id`)\
+        ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='pending_users'\
+        ;\
+        ")
+
+    cur.execute("DROP TABLE IF NOT EXISTS `processed_users` (\
+        `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'primary key',\
+        `name` varchar(255) DEFAULT NULL COMMENT 'comment',\
+         PRIMARY KEY (`id`)\
+        ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='processed_users'\
+        ;\
+        ")
 
 BASEURL = "https://api.github.com/" #The basic URL to use the GitHub API
 PARAMETERS = "&per_page=100" #Additional parameters for the query (by default 100 items per page)
