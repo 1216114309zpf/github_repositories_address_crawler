@@ -59,6 +59,9 @@ def createTables():
         ;\
         ")
 
+def getUrlsCount():
+    return cur.execute("select count(*) from repo_urls")
+
 BASEURL = "https://api.github.com/" #The basic URL to use the GitHub API
 PARAMETERS = "&per_page=100" #Additional parameters for the query (by default 100 items per page)
 DELAY_BETWEEN_QUERYS = 10 #The time to wait between different queries to GitHub (to avoid be banned)
@@ -123,14 +126,12 @@ def getFriendsFromUser(user):
 
 
 def getRepoFromUsers():
-    candidateQue = queue.Queue(2000)
-    dict = {"alibaba":True}
-    for user in SEEDUSERS:
-        candidateQue.put(user)
-        dict[user] = True
-    for org in ORGS:
-        dict[org] = True
-    while candidateQue.qsize() > 0:
+    while True:
+        currentCount = getUrlsCount()
+        print "Current count of urls is " + currentCount
+        if(currentCount > TARGET):
+            print "Finishing crawling, total count of urls is " + str(TARGET)
+        return
         currentUser = candidateQue.get()
         getRepo(currentUser, "users")
         friends = getFriendsFromUser(currentUser)
@@ -142,4 +143,4 @@ def getRepoFromUsers():
                 candidateQue.put(friend)
 
 createTables()
-#getRepoFromUsers()
+getRepoFromUsers()
